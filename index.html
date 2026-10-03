@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#123a29" />
+  <title>MIND GAME BASEBALL</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app-shell">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">2 PLAYER MIND BASEBALL</p>
+        <h1>MIND GAME BASEBALL</h1>
+      </div>
+      <p class="subtitle">ヒットは、1塁・2塁・3塁・ホームのどこだ。</p>
+    </header>
+
+    <section id="setupScreen" class="screen active">
+      <div class="setup-grid">
+        <div class="panel">
+          <h2>試合設定</h2>
+
+          <div class="player-pair-card">
+            <span class="pair-label">今回のプレイヤー</span>
+            <div class="pair-names">
+              <strong>たけ</strong>
+              <span>VS</span>
+              <strong>ゆか</strong>
+            </div>
+            <p>「プレイボール」を押すたびに、先攻・後攻をランダムで決めます。</p>
+          </div>
+
+          <div class="fixed-rule">
+            <span>試合形式</span>
+            <strong>3イニング制</strong>
+          </div>
+
+          <button id="startBtn" type="button" class="primary-btn">プレイボール</button>
+        </div>
+
+        <div class="panel compact-rules">
+          <h2>基本ルール</h2>
+          <ol>
+            <li>守備は「ヒット」を1塁・2塁・3塁・ホームのどこか1か所に隠す。</li>
+            <li>攻撃は1か所を選ぶ。×なら1アウト、その場所を除いた残りから続けて選ぶ。</li>
+            <li>◎なら、その場所に応じて1塁打・2塁打・3塁打・ホームラン。</li>
+            <li>ヒットが出たら4か所をすべて隠し直す。3アウトで攻守交代。</li>
+            <li>3回終了時に同点なら、ノーアウト2塁から延長戦。</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <section id="gameScreen" class="screen">
+      <div class="scoreboard panel">
+        <div class="score-top">
+          <div class="inning-block">
+            <span id="inningLabel" class="inning-pill">1回 表</span>
+            <span id="outLabel" class="out-pill">0 OUT</span>
+          </div>
+          <button id="restartBtn" type="button" class="ghost-btn">最初から</button>
+        </div>
+
+        <div class="score-grid">
+          <div class="team">
+            <span id="p1Name">プレイヤー1</span>
+            <strong id="p1Score">0</strong>
+          </div>
+          <div class="score-dash">-</div>
+          <div class="team">
+            <span id="p2Name">プレイヤー2</span>
+            <strong id="p2Score">0</strong>
+          </div>
+        </div>
+
+        <div class="role-row">
+          <span>攻撃 <strong id="offenseName"></strong></span>
+          <span>守備 <strong id="defenseName"></strong></span>
+        </div>
+      </div>
+
+      <div class="game-layout">
+        <section class="panel stadium-panel">
+          <div class="stadium-head">
+            <div>
+              <p class="mini-label">BASE RUNNERS</p>
+              <h2>ランナー状況</h2>
+            </div>
+</div>
+
+          <div class="diamond-wrap">
+            <div class="diamond-lines"></div>
+            <div id="runner2" class="runner runner-2">●</div>
+            <div id="runner3" class="runner runner-3">●</div>
+            <div id="runner1" class="runner runner-1">●</div>
+
+            <div class="base base-2"><span>2</span></div>
+            <div class="base base-3"><span>3</span></div>
+            <div class="base base-1"><span>1</span></div>
+            <div class="home-base">H</div>
+          </div>
+
+          <p id="baseText" class="base-text">走者なし</p>
+
+          <div class="inning-history">
+            <span>1回</span><span>2回</span><span>3回</span><span id="extraHistoryLabel">延長</span>
+          </div>
+          <div id="scoreHistory" class="history-grid"></div>
+        </section>
+
+        <section id="actionPanel" class="panel action-panel">
+
+          <div id="phaseBackdrop" class="phase-backdrop hidden defense" aria-hidden="true">
+            <div class="silhouette-scene defense-scene hidden">
+              <div class="png-silhouette png-defense" aria-hidden="true"></div>
+            </div>
+
+            <div class="silhouette-scene attack-scene hidden">
+              <div class="png-silhouette png-attack" aria-hidden="true"></div>
+            </div>
+          </div>
+
+          <div id="handoffPhase" class="hidden center-phase">
+            <div class="handoff-icon">↔</div>
+            <p id="handoffKicker" class="eyebrow">端末を渡してください</p>
+            <h2 id="handoffTitle">守備側へ</h2>
+            <p id="handoffText" class="muted"></p>
+            <button id="handoffReadyBtn" type="button" class="primary-btn">準備OK</button>
+          </div>
+
+          <div id="defensePhase" class="hidden">
+            <div class="role-banner defense-banner">
+              <div class="role-banner-icon defense-role-icon" aria-hidden="true"></div>
+              <div class="role-banner-copy">
+                <span>いまの担当</span>
+                <strong id="defenseRoleText">ゆかが守備</strong>
+                <em>DEFENSE</em>
+              </div>
+            </div>
+            <p class="eyebrow">守備側だけ見てください</p>
+            <h2>ヒットを隠す場所を選ぶ</h2>
+            <p class="muted">◎を置く場所を1つ選びます。残り3か所はすべて×です。</p>
+
+            <div class="choice-diamond" aria-label="守備配置">
+              <button type="button" class="spot defense-spot spot-2" data-spot="2">2塁</button>
+              <button type="button" class="spot defense-spot spot-3" data-spot="3">3塁</button>
+              <button type="button" class="spot defense-spot spot-1" data-spot="1">1塁</button>
+              <button type="button" class="spot defense-spot spot-home" data-spot="4">ホーム</button>
+            </div>
+
+            <button id="lockDefenseBtn" type="button" class="primary-btn" disabled>この配置で隠す</button>
+          </div>
+
+          <div id="attackPhase" class="hidden">
+            <div class="role-banner attack-banner">
+              <div class="role-banner-icon attack-role-icon" aria-hidden="true"></div>
+              <div class="role-banner-copy">
+                <span>いまの担当</span>
+                <strong id="attackRoleText">たけが攻撃</strong>
+                <em>ATTACK</em>
+              </div>
+            </div>
+            <p class="eyebrow">攻撃側</p>
+            <h2>ヒットを当てろ！</h2>
+            <p id="attackGuide" class="muted">4か所のうち1つを選んでください。</p>
+
+            <div class="choice-diamond attack-board" aria-label="攻撃選択">
+              <button type="button" class="spot attack-spot spot-2" data-spot="2"><span>2塁</span><b>?</b></button>
+              <button type="button" class="spot attack-spot spot-3" data-spot="3"><span>3塁</span><b>?</b></button>
+              <button type="button" class="spot attack-spot spot-1" data-spot="1"><span>1塁</span><b>?</b></button>
+              <button type="button" class="spot attack-spot spot-home" data-spot="4"><span>ホーム</span><b>?</b></button>
+            </div>
+          </div>
+
+          <div id="resultPhase" class="hidden center-phase">
+            <p id="resultBadge" class="result-badge">RESULT</p>
+            <h2 id="resultTitle">ヒット！</h2>
+            <p id="resultText" class="muted"></p>
+            <div id="resultDetail" class="result-detail"></div>
+            <button id="resultNextBtn" type="button" class="primary-btn">次へ</button>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <section id="endScreen" class="screen">
+      <div class="panel end-panel">
+        <p class="eyebrow">GAME SET</p>
+        <h2 id="winnerTitle">試合終了</h2>
+        <div id="finalScore" class="final-score"></div>
+        <p id="winnerMessage" class="muted"></p>
+        <button id="playAgainBtn" type="button" class="primary-btn">もう一度遊ぶ</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
