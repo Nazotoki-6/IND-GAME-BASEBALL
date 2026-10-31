@@ -1247,3 +1247,682 @@ button {
     font-size: 34px;
   }
 }
+
+
+/* =========================================================
+   CLEAN 2D BOARD
+   ========================================================= */
+
+.score-actions {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+}
+
+#bgmToggleBtn {
+  min-width: 86px;
+}
+
+/* Remove the heavy 3D feel from the selectable board */
+.choice-diamond {
+  position: relative;
+  width: min(100%, 330px);
+  height: 292px;
+  margin: 16px auto 0;
+  perspective: none;
+  transform: none;
+}
+
+/* Simple 2D baseball diamond lines */
+.choice-diamond::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 75px;
+  width: 142px;
+  height: 142px;
+  transform: translateX(-50%) rotate(45deg);
+  border: 2px solid rgba(255,255,255,.16);
+  border-radius: 6px;
+  background: transparent;
+  box-shadow: none;
+  opacity: 1;
+  pointer-events: none;
+}
+
+/* No ground shadow / filled green plate */
+.choice-diamond::after {
+  display: none;
+}
+
+/* Four buttons form one compact, balanced diamond */
+.spot {
+  min-width: 92px;
+  min-height: 68px;
+  border: 1px solid rgba(255,255,255,.16);
+  border-radius: 15px;
+  background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.045));
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.10),
+    0 5px 10px rgba(0,0,0,.18);
+  text-shadow: none;
+}
+
+.spot:active {
+  transform: scale(.97);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.08),
+    0 2px 5px rgba(0,0,0,.18);
+}
+
+.spot-2 {
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.spot-2:active {
+  transform: translateX(-50%) scale(.97);
+}
+
+.spot-3 {
+  top: 110px;
+  left: 0;
+}
+
+.spot-1 {
+  top: 110px;
+  right: 0;
+}
+
+.spot-home {
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.spot-home:active {
+  transform: translateX(-50%) scale(.97);
+}
+
+.spot.selected {
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.25),
+    0 5px 10px rgba(0,0,0,.20);
+}
+
+.spot.revealed-out,
+.spot.revealed-hit {
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.08),
+    0 5px 10px rgba(0,0,0,.18);
+}
+
+/* Flatten the runner field too */
+.diamond-wrap {
+  perspective: none;
+  filter: none;
+}
+
+.diamond-wrap::before {
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(35,104,62,.34);
+  transform: translateX(-50%) rotate(45deg);
+  box-shadow: none;
+}
+
+.diamond-lines {
+  border: 2px solid rgba(255,255,255,.28);
+  background: transparent;
+  transform: translateX(-50%) rotate(45deg);
+  box-shadow: none;
+}
+
+.base,
+.home-base {
+  box-shadow: 0 3px 8px rgba(0,0,0,.22);
+}
+
+.runner {
+  box-shadow: 0 3px 7px rgba(0,0,0,.28);
+}
+
+/* No cabinet tilt on tablet */
+@media (min-width: 760px) and (orientation: landscape) {
+  .stadium-panel,
+  .action-panel {
+    transform: none;
+  }
+
+  .choice-diamond {
+    width: 380px;
+    height: 305px;
+  }
+
+  .choice-diamond::before {
+    top: 79px;
+    width: 150px;
+    height: 150px;
+  }
+
+  .spot {
+    min-width: 102px;
+    min-height: 70px;
+  }
+
+  .spot-2 {
+    top: 6px;
+  }
+
+  .spot-3,
+  .spot-1 {
+    top: 116px;
+  }
+
+  .spot-home {
+    bottom: 6px;
+  }
+}
+
+@media (max-width: 759px) {
+  .score-top {
+    align-items: flex-start;
+  }
+
+  .score-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .score-actions .ghost-btn {
+    min-height: 36px;
+    padding-inline: 10px;
+  }
+}
+
+
+/* =========================================================
+   Runner status board fix
+   - remove the odd filled diamond
+   - show a clean outline field and a small mound circle
+   ========================================================= */
+
+.diamond-wrap {
+  width: 252px;
+  height: 208px;
+  margin: 18px auto 8px;
+  perspective: none;
+  filter: none;
+}
+
+.diamond-wrap::before {
+  top: 26px;
+  width: 150px;
+  height: 150px;
+  border: 2px solid rgba(255,255,255,.20);
+  border-radius: 8px;
+  background: transparent;
+  transform: translateX(-50%) rotate(45deg);
+  box-shadow: none;
+}
+
+.diamond-wrap::after {
+  display: none;
+}
+
+/* repurpose this element as the mound */
+.diamond-lines {
+  top: 84px;
+  width: 28px;
+  height: 28px;
+  border: 2px solid rgba(255,255,255,.18);
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, rgba(222,176,120,.96), rgba(170,112,60,.92));
+  transform: translateX(-50%);
+  box-shadow: 0 2px 6px rgba(0,0,0,.16);
+}
+
+/* keep bases balanced around the new field */
+.base-2 { top: 12px; left: calc(50% - 19px); }
+.base-3 { top: 92px; left: 24px; }
+.base-1 { top: 92px; right: 24px; }
+
+.home-base {
+  bottom: 4px;
+}
+
+.runner-2 { top: 17px; left: calc(50% - 13px); }
+.runner-3 { top: 98px; left: 30px; }
+.runner-1 { top: 98px; right: 30px; }
+
+@media (min-width: 760px) and (orientation: landscape) {
+  .diamond-wrap {
+    width: 300px;
+    height: 236px;
+  }
+
+  .diamond-wrap::before {
+    top: 30px;
+    width: 168px;
+    height: 168px;
+  }
+
+  .diamond-lines {
+    top: 96px;
+    width: 30px;
+    height: 30px;
+  }
+
+  .base-2 { top: 12px; left: calc(50% - 21px); }
+  .base-3 { top: 106px; left: 34px; }
+  .base-1 { top: 106px; right: 34px; }
+
+  .home-base {
+    bottom: 6px;
+  }
+
+  .runner-2 { top: 18px; left: calc(50% - 13px); }
+  .runner-3 { top: 112px; left: 41px; }
+  .runner-1 { top: 112px; right: 41px; }
+}
+
+
+/* =========================================================
+   Runner status polish v2
+   - cleaner diamond field
+   - subtle inner / outer guide lines
+   - better centered mound
+   ========================================================= */
+
+.diamond-wrap {
+  width: 262px;
+  height: 220px;
+  margin: 20px auto 10px;
+  perspective: none;
+  filter: none;
+}
+
+/* outer field guide */
+.diamond-wrap::before {
+  top: 28px;
+  width: 152px;
+  height: 152px;
+  border: 2px solid rgba(255,255,255,.18);
+  border-radius: 10px;
+  background: transparent;
+  transform: translateX(-50%) rotate(45deg);
+  box-shadow: none;
+}
+
+/* inner infield guide */
+.diamond-wrap::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 61px;
+  width: 88px;
+  height: 88px;
+  transform: translateX(-50%) rotate(45deg);
+  border: 1.5px solid rgba(255,255,255,.12);
+  border-radius: 6px;
+  background: transparent;
+  box-shadow: none;
+}
+
+/* small mound circle in the middle */
+.diamond-lines {
+  top: 92px;
+  width: 24px;
+  height: 24px;
+  border: 1.5px solid rgba(255,255,255,.16);
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, rgba(218,183,136,.95), rgba(177,122,76,.92));
+  transform: translateX(-50%);
+  box-shadow: 0 2px 5px rgba(0,0,0,.14);
+}
+
+/* cleaner base placement */
+.base {
+  width: 40px;
+  height: 40px;
+  box-shadow: 0 3px 8px rgba(0,0,0,.22);
+}
+
+.base-2 { top: 8px; left: calc(50% - 20px); }
+.base-3 { top: 92px; left: 24px; }
+.base-1 { top: 92px; right: 24px; }
+
+.home-base {
+  bottom: 6px;
+  left: calc(50% - 22px);
+  box-shadow: 0 3px 8px rgba(0,0,0,.22);
+}
+
+.runner-2 { top: 14px; left: calc(50% - 13px); }
+.runner-3 { top: 98px; left: 31px; }
+.runner-1 { top: 98px; right: 31px; }
+
+.base-text {
+  margin-top: 4px;
+}
+
+@media (min-width: 760px) and (orientation: landscape) {
+  .diamond-wrap {
+    width: 304px;
+    height: 246px;
+  }
+
+  .diamond-wrap::before {
+    top: 30px;
+    width: 170px;
+    height: 170px;
+  }
+
+  .diamond-wrap::after {
+    top: 68px;
+    width: 100px;
+    height: 100px;
+  }
+
+  .diamond-lines {
+    top: 102px;
+    width: 26px;
+    height: 26px;
+  }
+
+  .base-2 { top: 10px; left: calc(50% - 20px); }
+  .base-3 { top: 105px; left: 34px; }
+  .base-1 { top: 105px; right: 34px; }
+  .home-base { bottom: 8px; }
+
+  .runner-2 { top: 17px; left: calc(50% - 13px); }
+  .runner-3 { top: 112px; left: 41px; }
+  .runner-1 { top: 112px; right: 41px; }
+}
+
+
+/* =========================================================
+   Runner pieces: ball -> human silhouette
+   ========================================================= */
+
+.runner {
+  width: 30px;
+  height: 42px;
+  border: 0;
+  border-radius: 0;
+  background: linear-gradient(180deg, #ffe79a 0%, #ffc94f 55%, #d89408 100%);
+  -webkit-mask-image: url('runner_silhouette.svg');
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain;
+  mask-image: url('runner_silhouette.svg');
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+  box-shadow: none;
+  filter:
+    drop-shadow(0 2px 0 rgba(90,58,0,.55))
+    drop-shadow(0 4px 5px rgba(0,0,0,.30));
+}
+
+/* Small positional tweaks so the human figure sits cleanly over each base */
+.runner-2 {
+  top: 8px;
+  left: calc(50% - 15px);
+}
+
+.runner-3 {
+  top: 87px;
+  left: 29px;
+}
+
+.runner-1 {
+  top: 87px;
+  right: 29px;
+}
+
+@media (min-width: 760px) and (orientation: landscape) {
+  .runner {
+    width: 32px;
+    height: 45px;
+  }
+
+  .runner-2 {
+    top: 10px;
+    left: calc(50% - 16px);
+  }
+
+  .runner-3 {
+    top: 100px;
+    left: 39px;
+  }
+
+  .runner-1 {
+    top: 100px;
+    right: 39px;
+  }
+}
+
+
+/* =========================================================
+   Runner inline SVG fix
+   Ensures runner silhouettes display on all target browsers
+   ========================================================= */
+
+.runner {
+  width: 30px;
+  height: 42px;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: none !important;
+  -webkit-mask: none !important;
+  mask: none !important;
+  box-shadow: none !important;
+  filter: drop-shadow(0 3px 4px rgba(0,0,0,.30));
+  align-items: center;
+  justify-content: center;
+}
+
+.runner.visible {
+  display: flex;
+}
+
+.runner-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.runner-svg circle,
+.runner-svg path {
+  fill: #ffd35a;
+  stroke: #6f4b00;
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+
+.runner-2 {
+  top: 7px;
+  left: calc(50% - 15px);
+}
+
+.runner-3 {
+  top: 86px;
+  left: 28px;
+}
+
+.runner-1 {
+  top: 86px;
+  right: 28px;
+}
+
+@media (min-width: 760px) and (orientation: landscape) {
+  .runner {
+    width: 32px;
+    height: 45px;
+  }
+
+  .runner-2 {
+    top: 9px;
+    left: calc(50% - 16px);
+  }
+
+  .runner-3 {
+    top: 99px;
+    left: 38px;
+  }
+
+  .runner-1 {
+    top: 99px;
+    right: 38px;
+  }
+}
+
+
+/* Final runner image override */
+.runner {
+  width: 34px !important;
+  height: 46px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: none !important;
+  -webkit-mask: none !important;
+  mask: none !important;
+  box-shadow: none !important;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,.28));
+  align-items: center;
+  justify-content: center;
+}
+
+.runner.visible {
+  display: flex !important;
+}
+
+.runner-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.runner-2 { top: 5px !important; left: calc(50% - 17px) !important; }
+.runner-3 { top: 84px !important; left: 26px !important; }
+.runner-1 { top: 84px !important; right: 26px !important; }
+
+@media (min-width: 760px) and (orientation: landscape) {
+  .runner { width: 36px !important; height: 50px !important; }
+  .runner-2 { top: 8px !important; left: calc(50% - 18px) !important; }
+  .runner-3 { top: 98px !important; left: 36px !important; }
+  .runner-1 { top: 98px !important; right: 36px !important; }
+}
+
+
+/* =========================================================
+   Runner 3D polish
+   ========================================================= */
+
+.runner {
+  width: 36px !important;
+  height: 50px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: none !important;
+  box-shadow: none !important;
+  -webkit-mask: none !important;
+  mask: none !important;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+}
+
+.runner.visible {
+  display: flex !important;
+}
+
+/* ground shadow */
+.runner::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 1px;
+  width: 24px;
+  height: 8px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(0,0,0,.34) 0%, rgba(0,0,0,.18) 45%, rgba(0,0,0,0) 76%);
+  filter: blur(1px);
+  z-index: 0;
+}
+
+/* offset silhouette behind the runner for thickness */
+.runner::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(110,110,110,.9), rgba(45,45,45,.95));
+  -webkit-mask: url('runner_silhouette.png') center / contain no-repeat;
+  mask: url('runner_silhouette.png') center / contain no-repeat;
+  transform: translate(2px, 3px);
+  opacity: .45;
+  z-index: 1;
+}
+
+.runner-img {
+  position: relative;
+  z-index: 2;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter:
+    drop-shadow(0 1px 0 rgba(255,255,255,.20))
+    drop-shadow(0 3px 0 rgba(70,70,70,.55))
+    drop-shadow(0 6px 9px rgba(0,0,0,.30));
+}
+
+.runner-2 {
+  top: 3px !important;
+  left: calc(50% - 18px) !important;
+}
+
+.runner-3 {
+  top: 82px !important;
+  left: 24px !important;
+}
+
+.runner-1 {
+  top: 82px !important;
+  right: 24px !important;
+}
+
+@media (min-width: 760px) and (orientation: landscape) {
+  .runner {
+    width: 39px !important;
+    height: 54px !important;
+  }
+
+  .runner::before {
+    width: 26px;
+    height: 9px;
+  }
+
+  .runner::after {
+    transform: translate(2px, 4px);
+  }
+
+  .runner-2 {
+    top: 6px !important;
+    left: calc(50% - 19px) !important;
+  }
+
+  .runner-3 {
+    top: 96px !important;
+    left: 34px !important;
+  }
+
+  .runner-1 {
+    top: 96px !important;
+    right: 34px !important;
+  }
+}

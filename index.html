@@ -60,7 +60,10 @@
             <span id="inningLabel" class="inning-pill">1回 表</span>
             <span id="outLabel" class="out-pill">0 OUT</span>
           </div>
-          <button id="restartBtn" type="button" class="ghost-btn">最初から</button>
+          <div class="score-actions">
+            <button id="bgmToggleBtn" type="button" class="ghost-btn">BGM ON</button>
+            <button id="restartBtn" type="button" class="ghost-btn">最初から</button>
+          </div>
         </div>
 
         <div class="score-grid">
@@ -92,9 +95,9 @@
 
           <div class="diamond-wrap">
             <div class="diamond-lines"></div>
-            <div id="runner2" class="runner runner-2">●</div>
-            <div id="runner3" class="runner runner-3">●</div>
-            <div id="runner1" class="runner runner-1">●</div>
+            <div id="runner2" class="runner runner-2"><img class="runner-img" src="runner_silhouette.png" alt="" aria-hidden="true"></div>
+            <div id="runner3" class="runner runner-3"><img class="runner-img" src="runner_silhouette.png" alt="" aria-hidden="true"></div>
+            <div id="runner1" class="runner runner-1"><img class="runner-img" src="runner_silhouette.png" alt="" aria-hidden="true"></div>
 
             <div class="base base-2"><span>2</span></div>
             <div class="base base-3"><span>3</span></div>
@@ -196,6 +199,7 @@
     </section>
   </main>
 
+  <audio id="bgmAudio" src="Bottom_of_the_Ninth.mp3" loop preload="auto"></audio>
   <script src="script.js"></script>
 </body>
 </html>

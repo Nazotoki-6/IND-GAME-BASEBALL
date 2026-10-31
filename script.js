@@ -11,6 +11,8 @@
     startBtn: $('startBtn'),
     restartBtn: $('restartBtn'),
     playAgainBtn: $('playAgainBtn'),
+    bgmToggleBtn: $('bgmToggleBtn'),
+    bgmAudio: $('bgmAudio'),
 
     inningLabel: $('inningLabel'),
     outLabel: $('outLabel'),
@@ -88,13 +90,43 @@
       { top: null, bottom: null },
       { top: null, bottom: null }
     ],
-    extraScores: []
+    extraScores: [],
+    bgmMuted: false
   };
 
   function showScreen(name) {
     Object.values(screens).forEach((screen) => screen.classList.remove('active'));
     screens[name].classList.add('active');
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function updateBgmButton() {
+    if (!els.bgmToggleBtn) return;
+    els.bgmToggleBtn.textContent = state.bgmMuted ? 'BGM OFF' : 'BGM ON';
+  }
+
+  async function startBgm() {
+    if (!els.bgmAudio || state.bgmMuted) return;
+    els.bgmAudio.volume = 0.55;
+    els.bgmAudio.loop = true;
+    try {
+      await els.bgmAudio.play();
+    } catch (error) {
+      // Playback may wait for the next user interaction.
+    }
+  }
+
+  async function toggleBgm() {
+    if (!els.bgmAudio) return;
+    state.bgmMuted = !state.bgmMuted;
+
+    if (state.bgmMuted) {
+      els.bgmAudio.pause();
+    } else {
+      await startBgm();
+    }
+
+    updateBgmButton();
   }
 
   function hideAllPhases() {
@@ -547,7 +579,9 @@
     renderHistory();
   }
 
-  function startGame() {
+  async function startGame() {
+    await startBgm();
+    updateBgmButton();
     const pair = Math.random() < 0.5 ? ['たけ', 'ゆか'] : ['ゆか', 'たけ'];
     state.players = pair;
     state.scores = [0, 0];
@@ -578,6 +612,7 @@
   }
 
 
+  els.bgmToggleBtn?.addEventListener('click', toggleBgm);
   els.startBtn.addEventListener('click', startGame);
 
   els.restartBtn.addEventListener('click', () => {
@@ -608,5 +643,6 @@
 
   els.resultNextBtn.addEventListener('click', afterResult);
 
+  updateBgmButton();
   updateAll();
 })();
